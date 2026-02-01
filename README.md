@@ -329,3 +329,34 @@ pnpm frontend
 **Init Code Hash**: `0x53610d10df2dbe6319490ceeb6b7252926cc1e0cea27682301027672215b2db1`
 
 *See `deployments.json` for full details*
+
+## Live API
+
+The Rust backend is deployed on Railway:
+
+🌐 **https://radhat-production.up.railway.app**
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check & version info |
+| `/deposit` | POST | Generate next deposit address |
+| `/deposits` | GET | List all deposits |
+| `/deposits/{address}` | GET | Get specific deposit details |
+| `/router` | POST | Deploy proxies & route funds to treasury |
+
+**Example:**
+```bash
+# Health check
+curl https://radhat-production.up.railway.app/health
+
+# Create deposit address
+curl -X POST https://radhat-production.up.railway.app/deposit \
+  -H "Content-Type: application/json" \
+  -d '{"user": "0xYourAddress"}'
+
+# List deposits
+curl https://radhat-production.up.railway.app/deposits
+
+# Route funds
+curl -X POST https://radhat-production.up.railway.app/router
+```
