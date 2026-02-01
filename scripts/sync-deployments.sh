@@ -40,6 +40,7 @@ fi
 # Extract values
 DEPLOYER_ADDRESS=$(jq -r ".$NETWORK.contracts.DeterministicProxyDeployer" "$DEPLOYMENTS_FILE")
 ROUTER_ADDRESS=$(jq -r ".$NETWORK.contracts.FundRouter" "$DEPLOYMENTS_FILE")
+TREASURY_ADDRESS=$(jq -r ".$NETWORK.treasury" "$DEPLOYMENTS_FILE")
 INIT_CODE_HASH=$(jq -r ".$NETWORK.initCodeHash" "$DEPLOYMENTS_FILE")
 
 # Create .env from example if it doesn't exist
@@ -73,12 +74,14 @@ update_env_var() {
 
 update_env_var "DEPLOYER_ADDRESS" "$DEPLOYER_ADDRESS" "$RUST_ENV_FILE"
 update_env_var "ROUTER_ADDRESS" "$ROUTER_ADDRESS" "$RUST_ENV_FILE"
+update_env_var "TREASURY_ADDRESS" "$TREASURY_ADDRESS" "$RUST_ENV_FILE"
 update_env_var "INIT_CODE_HASH" "$INIT_CODE_HASH" "$RUST_ENV_FILE"
 
 echo ""
 echo "✅ Updated rust-backend/.env with $NETWORK addresses:"
 echo "   DEPLOYER_ADDRESS=$DEPLOYER_ADDRESS"
 echo "   ROUTER_ADDRESS=$ROUTER_ADDRESS"
+echo "   TREASURY_ADDRESS=$TREASURY_ADDRESS"
 echo "   INIT_CODE_HASH=$INIT_CODE_HASH"
 echo ""
-echo "📝 Remember to also set RPC_URL in rust-backend/.env"
+echo "📝 Remember to also set RPC_URL and PRIVATE_KEY in rust-backend/.env"
