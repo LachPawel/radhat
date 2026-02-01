@@ -4,6 +4,11 @@
     <strong>Deterministic CREATE2 Deposit Proxy System on Sepolia</strong>
   </p>
   <p>
+    <a href="https://github.com/LachPawel/radhat/actions/workflows/ci.yml">
+      <img src="https://github.com/LachPawel/radhat/actions/workflows/ci.yml/badge.svg" alt="CI" />
+    </a>
+  </p>
+  <p>
     <a href="#architecture">Architecture</a>
     ·
     <a href="#features">Features</a>
