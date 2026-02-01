@@ -35,9 +35,9 @@ export function CreateDepositButton({ onSuccess }: CreateDepositButtonProps) {
       <button
         onClick={handleCreate}
         disabled={!isConnected || isLoading}
-        className="px-6 py-3 bg-white text-black hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed rounded font-medium transition-colors"
+        className="w-full px-6 py-4 bg-white text-black hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed rounded-full font-bold text-sm tracking-wide transition-all duration-200 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] disabled:shadow-none"
       >
-        {isLoading ? 'Generating...' : 'Generate Deposit Address'}
+        {isLoading ? 'GENERATING...' : 'GENERATE DEPOSIT ADDRESS'}
       </button>
 
       {!isConnected && (

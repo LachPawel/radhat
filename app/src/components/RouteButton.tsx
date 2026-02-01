@@ -31,9 +31,9 @@ export function RouteButton({ onSuccess }: RouteButtonProps) {
       <button
         onClick={handleRoute}
         disabled={isLoading}
-        className="px-6 py-3 border border-neutral-600 hover:border-white hover:text-white text-neutral-300 disabled:border-neutral-800 disabled:text-neutral-600 disabled:cursor-not-allowed rounded font-medium transition-colors"
+        className="w-full px-6 py-4 border border-neutral-700 bg-neutral-900/50 hover:bg-neutral-900 hover:border-white text-white disabled:border-neutral-800 disabled:text-neutral-600 disabled:bg-transparent disabled:cursor-not-allowed rounded-full font-bold text-sm tracking-wide transition-all duration-200"
       >
-        {isLoading ? 'Routing...' : 'Route All Funds to Treasury'}
+        {isLoading ? 'ROUTING...' : 'ROUTE ALL FUNDS TO TREASURY'}
       </button>
 
       {error && (
