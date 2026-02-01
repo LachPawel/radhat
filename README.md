@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="app/public/favicon.svg" alt="RADHAT Logo" width="64" height="64" />
   <h1>RADHAT</h1>
   <p>
     <strong>Deterministic CREATE2 Deposit Proxy System on Sepolia</strong>
@@ -7,6 +8,9 @@
     <a href="https://github.com/LachPawel/radhat/actions/workflows/ci.yml">
       <img src="https://github.com/LachPawel/radhat/actions/workflows/ci.yml/badge.svg" alt="CI" />
     </a>
+  </p>
+  <p>
+    <img src="https://github.com/user-attachments/assets/9e17e83b-b0d3-48b4-a65e-a995ba80515b" alt="RADHAT UI" width="800" />
   </p>
   <p>
     <a href="#architecture">Architecture</a>
