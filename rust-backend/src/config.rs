@@ -6,7 +6,9 @@ pub struct Config {
     pub rpc_url: String,
     pub deployer_address: String,
     pub router_address: String,
+    pub treasury_address: String,
     pub init_code_hash: String,
+    pub private_key: String,
     pub host: String,
     pub port: u16,
 }
@@ -21,8 +23,12 @@ impl Config {
                 .map_err(|_| ConfigError::MissingVar("DEPLOYER_ADDRESS"))?,
             router_address: env::var("ROUTER_ADDRESS")
                 .map_err(|_| ConfigError::MissingVar("ROUTER_ADDRESS"))?,
+            treasury_address: env::var("TREASURY_ADDRESS")
+                .map_err(|_| ConfigError::MissingVar("TREASURY_ADDRESS"))?,
             init_code_hash: env::var("INIT_CODE_HASH")
                 .map_err(|_| ConfigError::MissingVar("INIT_CODE_HASH"))?,
+            private_key: env::var("PRIVATE_KEY")
+                .map_err(|_| ConfigError::MissingVar("PRIVATE_KEY"))?,
             host: env::var("HOST").unwrap_or_else(|_| "0.0.0.0".to_string()),
             port: env::var("PORT")
                 .unwrap_or_else(|_| "3001".to_string())
