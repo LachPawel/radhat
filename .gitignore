@@ -39,3 +39,7 @@ npm-debug.log*
 # Coverage
 coverage/
 coverage.json
+
+# Database
+
+data.db
