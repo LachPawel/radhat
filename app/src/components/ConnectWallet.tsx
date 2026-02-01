@@ -21,18 +21,18 @@ export function ConnectWallet() {
     );
   }
 
+  // Prioritize Injected (browser wallet) or fall back to the first available connector
+  const connector = connectors.find((c) => c.type === 'injected') || connectors[0];
+
+  if (!connector) return null;
+
   return (
-    <div className="flex gap-2">
-      {connectors.map((connector) => (
-        <button
-          key={connector.uid}
-          onClick={() => connect({ connector })}
-          disabled={isPending}
-          className="px-5 py-2 bg-white text-black hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed rounded-full text-sm font-bold tracking-wide transition-colors"
-        >
-          {isPending ? 'CONNECTING...' : 'CONNECT WALLET'}
-        </button>
-      ))}
-    </div>
+    <button
+      onClick={() => connect({ connector })}
+      disabled={isPending}
+      className="px-5 py-2 bg-white text-black hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed rounded-full text-sm font-bold tracking-wide transition-colors"
+    >
+      {isPending ? 'CONNECTING...' : 'CONNECT WALLET'}
+    </button>
   );
 }
