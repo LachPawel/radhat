@@ -10,6 +10,7 @@ mod db;
 mod error;
 mod models;
 mod routes;
+mod rpc;
 
 use config::Config;
 
@@ -37,6 +38,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env()?;
     tracing::info!("Loaded configuration");
     tracing::info!("  Deployer: {}", config.deployer_address);
+    tracing::info!("  Router: {}", config.router_address);
+    tracing::info!("  Treasury: {}", config.treasury_address);
     tracing::info!("  Init Code Hash: {}", config.init_code_hash);
 
     // Create database pool
@@ -61,6 +64,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/deposit", post(routes::deposit::create_deposit))
         .route("/deposits", get(routes::deposit::list_deposits))
         .route("/deposits/{address}", get(routes::deposit::get_deposit))
+        .route("/router", post(routes::router::route_deposits))
         .layer(
             CorsLayer::new()
                 .allow_origin(Any)
