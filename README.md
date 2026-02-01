@@ -8,6 +8,9 @@
     <a href="https://github.com/LachPawel/radhat/actions/workflows/ci.yml">
       <img src="https://github.com/LachPawel/radhat/actions/workflows/ci.yml/badge.svg" alt="CI" />
     </a>
+    <a href="https://radhat.netlify.app/">
+      <img src="https://img.shields.io/badge/demo-live-brightgreen" alt="Live Demo" />
+    </a>
   </p>
   <p>
     <img src="https://github.com/user-attachments/assets/9e17e83b-b0d3-48b4-a65e-a995ba80515b" alt="RADHAT UI" width="800" />
