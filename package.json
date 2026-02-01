@@ -10,13 +10,20 @@
     "rust:build": "cargo build --manifest-path rust-backend/Cargo.toml --release",
     "frontend": "pnpm --filter app dev"
   },
-  "keywords": ["ethereum", "create2", "proxy", "rust", "hardhat"],
+  "keywords": [
+    "ethereum",
+    "create2",
+    "proxy",
+    "rust",
+    "hardhat"
+  ],
   "author": "LachPawel",
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.4.0",
+    "dotenv": "^16.4.0",
     "hardhat": "^2.22.0",
-    "typescript": "^5.5.0",
-    "dotenv": "^16.4.0"
+    "typescript": "^5.5.0"
   }
 }
