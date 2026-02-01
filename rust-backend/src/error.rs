@@ -23,6 +23,7 @@ pub enum AppError {
     NotFound(String),
 
     #[error("Internal error: {0}")]
+    #[allow(dead_code)]
     Internal(String),
 }
 

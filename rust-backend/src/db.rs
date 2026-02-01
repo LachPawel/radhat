@@ -151,6 +151,7 @@ pub async fn get_deposit_by_address(
 }
 
 /// Get all deposits for a user
+#[allow(dead_code)]
 pub async fn get_deposits_by_user(
     pool: &SqlitePool,
     user_address: &str,
@@ -203,6 +204,7 @@ pub async fn update_deposit_status(
 }
 
 /// Get deposits by status
+#[allow(dead_code)]
 pub async fn get_deposits_by_status(
     pool: &SqlitePool,
     status: &str,
@@ -258,5 +260,6 @@ pub struct DepositRow {
     pub nonce: i64,
     pub status: String,
     pub created_at: String,
+    #[allow(dead_code)]
     pub updated_at: String,
 }

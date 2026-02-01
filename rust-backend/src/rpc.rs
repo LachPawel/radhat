@@ -72,6 +72,7 @@ pub struct RpcClient {
     provider: ReadProvider,
     wallet_provider: WalletProvider,
     deployer_address: Address,
+    #[allow(dead_code)]
     router_address: Address,
     treasury_address: Address,
 }
@@ -136,6 +137,7 @@ impl RpcClient {
     }
 
     /// Check balances for multiple addresses
+    #[allow(dead_code)]
     pub async fn get_balances(
         &self,
         addresses: &[Address],
@@ -228,6 +230,7 @@ impl RpcClient {
 
     /// Batch transfer funds from multiple proxies
     /// Returns a vector of (proxy_address, tx_hash) for successful transfers
+    #[allow(dead_code)]
     pub async fn batch_transfer_funds(
         &self,
         proxy_addresses: Vec<Address>,
@@ -250,16 +253,19 @@ impl RpcClient {
     }
 
     /// Get the treasury address
+    #[allow(dead_code)]
     pub fn treasury_address(&self) -> Address {
         self.treasury_address
     }
 
     /// Get the deployer contract address
+    #[allow(dead_code)]
     pub fn deployer_address(&self) -> Address {
         self.deployer_address
     }
 
-    /// Get the router address  
+    /// Get the router address
+    #[allow(dead_code)]
     pub fn router_address(&self) -> Address {
         self.router_address
     }
