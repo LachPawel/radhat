@@ -142,9 +142,10 @@ This repository is structured as a series of PRs, each representing a chapter in
 - [x] Add unit tests for `DeterministicProxyDeployer` (16 tests)
 - [x] Full E2E test: deposit → forward → route to treasury
 
-### Chapter 3: The Deployment - Sepolia Launch
-- [ ] Create deployment script following the required flow
-- [ ] Deploy to Sepolia and save addresses to `deployments.json`
+### Chapter 3: The Deployment - Sepolia Launch ✅
+- [x] Create deployment script following the required flow
+- [x] Deploy to Sepolia and save addresses to `deployments.json`
+- [x] Add verification step to confirm permissions are set correctly
 
 ### Chapter 4: The Backend - Rust Foundation
 - [ ] Set up Axum server with CORS
@@ -272,12 +273,12 @@ pnpm frontend
 
 ## Deployed Addresses (Sepolia)
 
-> *Will be populated after Chapter 3*
-
 | Contract | Address |
 |----------|---------|
-| FundRouterStorage | `0x...` |
-| FundRouter | `0x...` |
-| DeterministicProxyDeployer | `0x...` |
+| FundRouterStorage | [`0x66C686Bc2DD44078f44B5E78b5106cFE16fC35f2`](https://sepolia.etherscan.io/address/0x66C686Bc2DD44078f44B5E78b5106cFE16fC35f2) |
+| FundRouter | [`0x7238CA877BbAcC8C273C701636A2041F6569f266`](https://sepolia.etherscan.io/address/0x7238CA877BbAcC8C273C701636A2041F6569f266) |
+| DeterministicProxyDeployer | [`0x2b05DAf67cc41957f60F74Ff7D3c4aB54840Fc8D`](https://sepolia.etherscan.io/address/0x2b05DAf67cc41957f60F74Ff7D3c4aB54840Fc8D) |
+
+**Init Code Hash**: `0x53610d10df2dbe6319490ceeb6b7252926cc1e0cea27682301027672215b2db1`
 
 *See `deployments.json` for full details*

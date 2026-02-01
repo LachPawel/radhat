@@ -5,6 +5,7 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy.ts --network hardhat",
     "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia",
     "rust:run": "cargo run --manifest-path rust-backend/Cargo.toml",
     "rust:build": "cargo build --manifest-path rust-backend/Cargo.toml --release",

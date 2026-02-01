@@ -1,0 +1,30 @@
+{
+  "hardhat": {
+    "network": "hardhat",
+    "chainId": 31337,
+    "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "treasury": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "contracts": {
+      "FundRouterStorage": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "FundRouter": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "DeterministicProxyDeployer": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+    },
+    "initCodeHash": "0x1e22cf24f5f276455362aa65a9df2634dc07e15668e24270545128a39dd93b62",
+    "deployedAt": "2026-02-01T16:24:59.697Z",
+    "blockNumber": 5
+  },
+  "sepolia": {
+    "network": "sepolia",
+    "chainId": 0,
+    "deployer": "0x2b0d92ad915cB5188bfb36c67Df440B6D32fBDD4",
+    "treasury": "0x2b0d92ad915cB5188bfb36c67Df440B6D32fBDD4",
+    "contracts": {
+      "FundRouterStorage": "0x66C686Bc2DD44078f44B5E78b5106cFE16fC35f2",
+      "FundRouter": "0x7238CA877BbAcC8C273C701636A2041F6569f266",
+      "DeterministicProxyDeployer": "0x2b05DAf67cc41957f60F74Ff7D3c4aB54840Fc8D"
+    },
+    "initCodeHash": "0x53610d10df2dbe6319490ceeb6b7252926cc1e0cea27682301027672215b2db1",
+    "deployedAt": "2026-02-01T16:42:14.261Z",
+    "blockNumber": 10170289
+  }
+}
