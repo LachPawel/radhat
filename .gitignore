@@ -32,7 +32,8 @@ build/
 *.log
 npm-debug.log*
 
-# Deployment artifacts (keep deployments.json tracked)
+# Deployment artifacts
+# Note: deployments.json is tracked to share addresses with Rust backend
 # deployments.json
 
 # Coverage
