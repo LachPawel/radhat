@@ -81,6 +81,25 @@ describe("FundRouterStorage", function () {
       expect(await storage.permissions(alice.address)).to.equal(TREASURY_BIT);
     });
 
+    it("should overwrite (not OR) when setting permissions twice on same address", async function () {
+      // This test documents the overwrite behavior that caused the deployment bug
+      // If deployer and treasury are the same address, you must set BOTH_BITS (0x03)
+      // Setting CALLER_BIT then TREASURY_BIT separately results in only TREASURY_BIT
+      await storage.setPermissions(alice.address, CALLER_BIT);
+      expect(await storage.isAllowedCaller(alice.address)).to.be.true;
+      expect(await storage.isAllowedTreasury(alice.address)).to.be.false;
+      
+      // Second call OVERWRITES, not ORs
+      await storage.setPermissions(alice.address, TREASURY_BIT);
+      expect(await storage.isAllowedCaller(alice.address)).to.be.false; // Lost!
+      expect(await storage.isAllowedTreasury(alice.address)).to.be.true;
+      
+      // Correct way: set both at once
+      await storage.setPermissions(alice.address, BOTH_BITS);
+      expect(await storage.isAllowedCaller(alice.address)).to.be.true;
+      expect(await storage.isAllowedTreasury(alice.address)).to.be.true;
+    });
+
     it("should allow clearing permissions", async function () {
       await storage.setPermissions(alice.address, BOTH_BITS);
       await storage.setPermissions(alice.address, 0);
