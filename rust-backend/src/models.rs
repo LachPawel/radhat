@@ -55,3 +55,32 @@ pub struct ErrorResponse {
     pub error: String,
     pub code: String,
 }
+
+/// POST /router response
+#[derive(Debug, Serialize)]
+pub struct RouteResponse {
+    /// Number of pending deposits checked
+    pub checked: usize,
+    /// Number of deposits with funds (balance > 0)
+    pub funded: usize,
+    /// Number of proxies deployed
+    pub deployed: usize,
+    /// Number of proxies with funds routed to treasury
+    pub routed: usize,
+    /// Transaction hash for deployMultiple (if any)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deploy_tx_hash: Option<String>,
+    /// Transaction hashes for transferFunds calls
+    pub route_tx_hashes: Vec<RouteTransactionInfo>,
+    /// Any errors encountered during routing
+    pub errors: Vec<String>,
+}
+
+/// Info about a routing transaction
+#[derive(Debug, Serialize)]
+pub struct RouteTransactionInfo {
+    pub proxy_address: String,
+    pub tx_hash: String,
+    pub amount_wei: String,
+}
+

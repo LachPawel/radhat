@@ -203,6 +203,53 @@ pub async fn update_deposit_status(
     Ok(())
 }
 
+/// Get deposits by status
+pub async fn get_deposits_by_status(
+    pool: &SqlitePool,
+    status: &str,
+) -> Result<Vec<DepositRow>, sqlx::Error> {
+    sqlx::query_as(
+        r#"
+        SELECT id, user_address, salt, deposit_address, nonce, status, created_at, updated_at
+        FROM deposits
+        WHERE status = ?
+        ORDER BY created_at ASC
+        "#,
+    )
+    .bind(status)
+    .fetch_all(pool)
+    .await
+}
+
+/// Get deposits by multiple statuses
+pub async fn get_deposits_by_statuses(
+    pool: &SqlitePool,
+    statuses: &[&str],
+) -> Result<Vec<DepositRow>, sqlx::Error> {
+    if statuses.is_empty() {
+        return Ok(vec![]);
+    }
+    
+    // Build dynamic query with IN clause
+    let placeholders: Vec<&str> = statuses.iter().map(|_| "?").collect();
+    let query = format!(
+        r#"
+        SELECT id, user_address, salt, deposit_address, nonce, status, created_at, updated_at
+        FROM deposits
+        WHERE status IN ({})
+        ORDER BY created_at ASC
+        "#,
+        placeholders.join(", ")
+    );
+    
+    let mut query_builder = sqlx::query_as::<_, DepositRow>(&query);
+    for status in statuses {
+        query_builder = query_builder.bind(*status);
+    }
+    
+    query_builder.fetch_all(pool).await
+}
+
 #[derive(Debug, sqlx::FromRow)]
 pub struct DepositRow {
     pub id: i64,
