@@ -86,7 +86,7 @@ This allows computing the address **before** deployment - the address is determi
 
 ## Tech Stack
 
-- **Smart Contracts**: Solidity 0.8.28, Hardhat 3, Viem, EIP-1167 Minimal Proxy
+- **Smart Contracts**: Solidity 0.8.20, Hardhat 2, ethers.js, EIP-1167 Minimal Proxy
 - **Backend**: Rust, Axum, SQLx, alloy
 - **Frontend**: React/Next.js, TypeScript, TailwindCSS
 - **Blockchain**: Ethereum Sepolia Testnet
@@ -95,15 +95,19 @@ This allows computing the address **before** deployment - the address is determi
 
 ```
 .
-├── contracts/                    # Solidity smart contracts (Chapter 1)
-├── rust-backend/                 # Rust API server (Chapter 4)
-├── app/                          # React/Next.js frontend (Chapter 6)
-├── scripts/                      # Deployment scripts (Chapter 3)
-├── test/                         # Contract tests (Chapter 2)
-├── hardhat.config.ts             # Hardhat 3 configuration
-├── tsconfig.json                 # TypeScript config
-├── package.json                  # Dependencies & scripts
-└── .env.example                  # Environment template
+├── contracts/
+│   ├── IFundRouter.sol              # Interface for fund routing
+│   ├── FundRouterStorage.sol        # Permission storage (ready)
+│   ├── FundRouter.sol               # Main router (TODOs)
+│   └── DeterministicProxyDeployer.sol # CREATE2 deployer (TODO)
+├── rust-backend/                    # Rust API server (Chapter 4)
+├── app/                             # React/Next.js frontend (Chapter 6)
+├── scripts/                         # Deployment scripts (Chapter 3)
+├── test/                            # Contract tests (Chapter 2)
+├── hardhat.config.ts                # Hardhat 2 configuration
+├── tsconfig.json                    # TypeScript config
+├── package.json                     # Dependencies & scripts
+└── .env.example                     # Environment template
 ```
 
 ## Development Journey (Chapters)
@@ -113,13 +117,17 @@ This repository is structured as a series of PRs, each representing a chapter in
 ### Chapter 0: The Beginning - Project Scaffold ✅
 - [x] Initialize repository with pnpm
 - [x] Set up folder structure (`contracts/`, `rust-backend/`, `app/`, `scripts/`, `test/`)
-- [x] Configure Hardhat 3 with Viem and Solidity 0.8.28
+- [x] Configure Hardhat 2 with ethers.js and Solidity 0.8.20
 - [x] Create `.env.example` with required variables
-- [x] Add TypeScript and ESM support
+- [x] Add TypeScript support
 
-### Chapter 1: The Contracts - Solidity Skeletons
-- [ ] Add contract skeletons with TODOs from assignment
-- [ ] Verify contracts compile with Hardhat 3
+### Chapter 1: The Contracts - Solidity Skeletons ✅
+- [x] Add `IFundRouter.sol` - interface for `transferFunds()`
+- [x] Add `FundRouterStorage.sol` - permission bitmask storage (ready)
+- [x] Add `FundRouter.sol` - main router with 3 TODOs
+- [x] Add `DeterministicProxyDeployer.sol` - CREATE2 deployer with 1 TODO
+- [x] Verify contracts compile with Hardhat 2
+- [x] Add unit tests for `FundRouterStorage` (30 tests passing)
 
 ### Chapter 2: The Proxy - Implementing EIP-1167
 - [ ] Implement `_proxyInitCode()` with minimal proxy bytecode
@@ -194,7 +202,7 @@ Route all funded deposit addresses to treasury.
 
 ### Prerequisites
 
-- Node.js 22+ (required for Hardhat 3)
+- Node.js 18+
 - pnpm
 - Rust 1.80+ (for backend, Chapter 4+)
 - Sepolia RPC URL (Infura/Alchemy)

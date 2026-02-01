@@ -2,7 +2,6 @@
   "name": "radhat",
   "version": "0.1.0",
   "description": "Deterministic CREATE2 Deposit Proxy System on Sepolia",
-  "type": "module",
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
@@ -15,8 +14,8 @@
   "author": "LachPawel",
   "license": "MIT",
   "devDependencies": {
-    "hardhat": "^3.0.0",
-    "@nomicfoundation/hardhat-toolbox-viem": "^5.0.0",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.22.0",
     "typescript": "^5.5.0",
     "dotenv": "^16.4.0"
   }
