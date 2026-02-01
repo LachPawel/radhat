@@ -44,7 +44,7 @@ This project demonstrates the core mechanics behind payment processors like Rado
 │                  POST /deposit    POST /router                   │
 │                                                                  │
 │   ┌─────────────┐    ┌─────────────┐    ┌─────────────┐        │
-│   │   CREATE2   │    │   SQLite    │    │  ethers-rs  │        │
+│   │   CREATE2   │    │   SQLite    │    │   alloy     │        │
 │   │  Compute    │    │   Storage   │    │    RPC      │        │
 │   └─────────────┘    └─────────────┘    └─────────────┘        │
 └──────────────────────────────┬──────────────────────────────────┘
@@ -86,8 +86,8 @@ This allows computing the address **before** deployment - the address is determi
 
 ## Tech Stack
 
-- **Smart Contracts**: Solidity 0.8.20, Hardhat, EIP-1167 Minimal Proxy
-- **Backend**: Rust, Axum, SQLx, alloy/ethers-rs
+- **Smart Contracts**: Solidity 0.8.28, Hardhat 3, Viem, EIP-1167 Minimal Proxy
+- **Backend**: Rust, Axum, SQLx, alloy
 - **Frontend**: React/Next.js, TypeScript, TailwindCSS
 - **Blockchain**: Ethereum Sepolia Testnet
 
@@ -95,82 +95,69 @@ This allows computing the address **before** deployment - the address is determi
 
 ```
 .
-├── contracts/                    # Solidity smart contracts
-│   ├── DeterministicProxyDeployer.sol
-│   ├── FundRouter.sol
-│   ├── FundRouterStorage.sol
-│   └── IFundRouter.sol
-├── rust-backend/                 # Rust API server
-│   ├── src/
-│   │   ├── main.rs              # Axum server
-│   │   ├── routes.rs            # /deposit, /router endpoints
-│   │   ├── create2.rs           # CREATE2 computation
-│   │   ├── db.rs                # SQLite storage
-│   │   └── bin/
-│   │       ├── precompute.rs    # CLI: compute address from salt
-│   │       └── deploy_contracts.rs
-│   └── Cargo.toml
-├── app/                          # React/Next.js frontend
-├── scripts/
-│   └── deploy.ts                # Hardhat deployment script
-├── hardhat.config.ts
-└── README.md
+├── contracts/                    # Solidity smart contracts (Chapter 1)
+├── rust-backend/                 # Rust API server (Chapter 4)
+├── app/                          # React/Next.js frontend (Chapter 6)
+├── scripts/                      # Deployment scripts (Chapter 3)
+├── test/                         # Contract tests (Chapter 2)
+├── hardhat.config.ts             # Hardhat 3 configuration
+├── tsconfig.json                 # TypeScript config
+├── package.json                  # Dependencies & scripts
+└── .env.example                  # Environment template
 ```
 
 ## Development Journey (Chapters)
 
 This repository is structured as a series of PRs, each representing a chapter in the development story. Each chapter introduces new concepts, challenges, and solutions.
 
-### Chapter 0: The Beginning - Project Scaffold
-- Initialize empty repository
-- Set up basic folder structure
-- Configure package.json and git
+### Chapter 0: The Beginning - Project Scaffold ✅
+- [x] Initialize repository with pnpm
+- [x] Set up folder structure (`contracts/`, `rust-backend/`, `app/`, `scripts/`, `test/`)
+- [x] Configure Hardhat 3 with Viem and Solidity 0.8.28
+- [x] Create `.env.example` with required variables
+- [x] Add TypeScript and ESM support
 
 ### Chapter 1: The Contracts - Solidity Skeletons
-- Add Hardhat configuration
-- Copy contract skeletons with TODOs from assignment
-- Set up TypeScript and dependencies
-- Create `.env.example` with required variables
+- [ ] Add contract skeletons with TODOs from assignment
+- [ ] Verify contracts compile with Hardhat 3
 
 ### Chapter 2: The Proxy - Implementing EIP-1167
-- Implement `_proxyInitCode()` with minimal proxy bytecode
-- Complete `_isAllowedCaller()` and `_isAllowedTreasury()` storage checks
-- Add ERC20 transfer logic
-- Write unit tests for contracts
+- [ ] Implement `_proxyInitCode()` with minimal proxy bytecode
+- [ ] Complete `_isAllowedCaller()` and `_isAllowedTreasury()` storage checks
+- [ ] Add ERC20 transfer logic
+- [ ] Write unit tests for contracts
 
 ### Chapter 3: The Deployment - Sepolia Launch
-- Create deployment script following the required flow:
-  1. Deploy FundRouterStorage
-  2. Set permissions (caller: 0x01, treasury: 0x02)
-  3. Deploy FundRouter
-  4. Deploy DeterministicProxyDeployer
-- Deploy to Sepolia and save addresses to `deployments.json`
+- [ ] Create deployment script following the required flow
+- [ ] Deploy to Sepolia and save addresses to `deployments.json`
 
 ### Chapter 4: The Backend - Rust Foundation
-- Set up Axum server with CORS
-- Implement CREATE2 address computation matching Solidity
-- Create SQLite schema for deposit addresses
-- Build `/deposit` endpoint for address generation
+- [ ] Set up Axum server with CORS
+- [ ] Implement CREATE2 address computation matching Solidity
+- [ ] Create SQLite schema for deposit addresses
+- [ ] Build `/deposit` endpoint for address generation
 
 ### Chapter 5: The Router - Fund Routing Logic
-- Implement `/router` endpoint
-- Add balance checking via RPC
-- Deploy proxies for funded addresses
-- Route ETH to treasury
+- [ ] Implement `/router` endpoint
+- [ ] Add balance checking via RPC
+- [ ] Deploy proxies for funded addresses
+- [ ] Route ETH to treasury
 
 ### Chapter 6: The Interface - React Dashboard
-- Create minimal frontend with deposit table
-- Add "Get Next Deposit Address" button
-- Add "Route Funds to Treasury" button
-- Implement periodic balance polling
+- [ ] Create minimal frontend with deposit table
+- [ ] Add "Get Next Deposit Address" button
+- [ ] Add "Route Funds to Treasury" button
+- [ ] Implement periodic balance polling
 
 ### Chapter 7: The Polish - Integration & Documentation
-- End-to-end testing on Sepolia
-- Add screenshots/GIF of complete flow
-- Document all TODO implementations
-- Final README with assumptions and run instructions
+- [ ] End-to-end testing on Sepolia
+- [ ] Add screenshots/GIF of complete flow
+- [ ] Document all TODO implementations
+- [ ] Final README with assumptions and run instructions
 
-## API Endpoints
+## API Endpoints (Planned)
+
+> *These endpoints will be implemented in Chapters 4-5*
 
 ### POST /deposit
 
@@ -207,9 +194,9 @@ Route all funded deposit addresses to treasury.
 
 ### Prerequisites
 
-- Rust 1.80+
-- Node.js 18+
+- Node.js 22+ (required for Hardhat 3)
 - pnpm
+- Rust 1.80+ (for backend, Chapter 4+)
 - Sepolia RPC URL (Infura/Alchemy)
 - Funded Sepolia wallet
 
@@ -250,14 +237,16 @@ pnpm frontend
 3. Watch status change to "Funded"
 4. Call `POST /router` → verify treasury receives ETH
 
-## TODOs Implemented
+## TODOs to Implement
 
-| File | Function | Implementation |
-|------|----------|----------------|
-| `DeterministicProxyDeployer.sol` | `_proxyInitCode()` | EIP-1167 minimal proxy bytecode |
-| `FundRouter.sol` | `_isAllowedCaller()` | staticcall to FundRouterStorage |
-| `FundRouter.sol` | `_isAllowedTreasury()` | staticcall to FundRouterStorage |
-| `FundRouter.sol` | ERC20 transfer | `IERC20(token).transfer(treasuryAddress, amt)` |
+> *Will be completed in Chapter 2*
+
+| File | Function | Status |
+|------|----------|--------|
+| `DeterministicProxyDeployer.sol` | `_proxyInitCode()` | ⏳ Pending |
+| `FundRouter.sol` | `_isAllowedCaller()` | ⏳ Pending |
+| `FundRouter.sol` | `_isAllowedTreasury()` | ⏳ Pending |
+| `FundRouter.sol` | ERC20 transfer | ⏳ Pending |
 
 ## Assumptions
 
@@ -267,6 +256,8 @@ pnpm frontend
 - Proxies deploy lazily on first route, not on fund detection
 
 ## Deployed Addresses (Sepolia)
+
+> *Will be populated after Chapter 3*
 
 | Contract | Address |
 |----------|---------|
