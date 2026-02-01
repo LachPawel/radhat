@@ -97,13 +97,18 @@ This allows computing the address **before** deployment - the address is determi
 .
 ├── contracts/
 │   ├── IFundRouter.sol              # Interface for fund routing
-│   ├── FundRouterStorage.sol        # Permission storage (ready)
-│   ├── FundRouter.sol               # Main router (TODOs)
-│   └── DeterministicProxyDeployer.sol # CREATE2 deployer (TODO)
+│   ├── FundRouterStorage.sol        # Permission storage (bitmask)
+│   ├── FundRouter.sol               # Main router with permission checks
+│   ├── DeterministicProxyDeployer.sol # CREATE2 proxy deployer
+│   └── test/
+│       └── MockERC20.sol            # Test token (OpenZeppelin)
+├── test/
+│   ├── FundRouterStorage.test.ts    # 30 permission tests
+│   ├── FundRouter.test.ts           # 15 routing tests
+│   └── DeterministicProxyDeployer.test.ts # 16 proxy tests
 ├── rust-backend/                    # Rust API server (Chapter 4)
 ├── app/                             # React/Next.js frontend (Chapter 6)
 ├── scripts/                         # Deployment scripts (Chapter 3)
-├── test/                            # Contract tests (Chapter 2)
 ├── hardhat.config.ts                # Hardhat 2 configuration
 ├── tsconfig.json                    # TypeScript config
 ├── package.json                     # Dependencies & scripts
@@ -129,11 +134,13 @@ This repository is structured as a series of PRs, each representing a chapter in
 - [x] Verify contracts compile with Hardhat 2
 - [x] Add unit tests for `FundRouterStorage` (30 tests passing)
 
-### Chapter 2: The Proxy - Implementing EIP-1167
-- [ ] Implement `_proxyInitCode()` with minimal proxy bytecode
-- [ ] Complete `_isAllowedCaller()` and `_isAllowedTreasury()` storage checks
-- [ ] Add ERC20 transfer logic
-- [ ] Write unit tests for contracts
+### Chapter 2: The Proxy - Implementing EIP-1167 ✅
+- [x] Implement `_proxyInitCode()` with custom CALL-based forwarding proxy (38-byte runtime)
+- [x] Implement combined `_checkPermissions()` using `isAllowedCallerAndTreasury()` for gas efficiency
+- [x] Add ERC20 transfer logic with proper error handling
+- [x] Add unit tests for `FundRouter` (15 tests)
+- [x] Add unit tests for `DeterministicProxyDeployer` (16 tests)
+- [x] Full E2E test: deposit → forward → route to treasury
 
 ### Chapter 3: The Deployment - Sepolia Launch
 - [ ] Create deployment script following the required flow
@@ -245,23 +252,23 @@ pnpm frontend
 3. Watch status change to "Funded"
 4. Call `POST /router` → verify treasury receives ETH
 
-## TODOs to Implement
+## TODOs Implemented
 
-> *Will be completed in Chapter 2*
+> *Completed in Chapter 2*
 
-| File | Function | Status |
-|------|----------|--------|
-| `DeterministicProxyDeployer.sol` | `_proxyInitCode()` | ⏳ Pending |
-| `FundRouter.sol` | `_isAllowedCaller()` | ⏳ Pending |
-| `FundRouter.sol` | `_isAllowedTreasury()` | ⏳ Pending |
-| `FundRouter.sol` | ERC20 transfer | ⏳ Pending |
+| File | Function | Implementation |
+|------|----------|----------------|
+| `DeterministicProxyDeployer.sol` | `_proxyInitCode()` | Custom CALL-based proxy (38-byte runtime) that forwards ETH to FundRouter |
+| `FundRouter.sol` | `_checkPermissions()` | Combined `staticcall` to `isAllowedCallerAndTreasury()` for gas efficiency |
+| `FundRouter.sol` | ERC20 transfer | `IERC20(token).transfer(treasuryAddress, amt)` with `ERC20TransferFailed` error |
 
 ## Assumptions
 
-- ETH-only routing (ERC20 as stretch goal)
+- ETH and ERC20 routing supported
 - Single treasury address per deployment
 - SQLite for simplicity (Postgres-ready schema)
 - Proxies deploy lazily on first route, not on fund detection
+- CALL-based proxy (not DELEGATECALL) so ETH lands in FundRouter
 
 ## Deployed Addresses (Sepolia)
 
