@@ -35,30 +35,32 @@ export function CreateDepositButton({ onSuccess }: CreateDepositButtonProps) {
       <button
         onClick={handleCreate}
         disabled={!isConnected || isLoading}
-        className="px-6 py-3 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-medium transition-colors"
+        className="w-full px-6 py-4 bg-white text-black hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed rounded-full font-bold text-sm tracking-wide transition-all duration-200 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] disabled:shadow-none"
       >
-        {isLoading ? 'Generating...' : 'Generate Deposit Address'}
+        {isLoading ? 'GENERATING...' : 'GENERATE DEPOSIT ADDRESS'}
       </button>
 
       {!isConnected && (
-        <p className="text-sm text-gray-400">Connect your wallet to generate a deposit address</p>
+        <p className="text-sm text-neutral-500">
+          Connect your wallet to generate a deposit address
+        </p>
       )}
 
       {error && (
-        <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="p-4 border border-neutral-700 rounded bg-neutral-900">
+          <p className="text-neutral-400 text-sm">⚠ {error}</p>
         </div>
       )}
 
       {result && (
-        <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-lg space-y-2">
-          <p className="text-green-400 font-medium">✓ Deposit address created!</p>
+        <div className="p-4 border border-neutral-700 rounded bg-neutral-900 space-y-2">
+          <p className="text-white font-medium">✓ Deposit address created</p>
           <div className="space-y-1 text-sm">
-            <p className="text-gray-300">
-              <span className="text-gray-500">Address:</span>{' '}
-              <code className="text-purple-400">{result.deposit_address}</code>
+            <p className="text-neutral-300">
+              <span className="text-neutral-500">Address:</span>{' '}
+              <code className="text-white font-mono">{result.deposit_address}</code>
             </p>
-            <p className="text-gray-400">{result.note}</p>
+            <p className="text-neutral-500">{result.note}</p>
           </div>
         </div>
       )}

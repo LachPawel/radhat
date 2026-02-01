@@ -1,7 +1,16 @@
 <div align="center">
+  <img src="app/public/favicon.svg" alt="RADHAT Logo" width="64" height="64" />
   <h1>RADHAT</h1>
   <p>
     <strong>Deterministic CREATE2 Deposit Proxy System on Sepolia</strong>
+  </p>
+  <p>
+    <a href="https://github.com/LachPawel/radhat/actions/workflows/ci.yml">
+      <img src="https://github.com/LachPawel/radhat/actions/workflows/ci.yml/badge.svg" alt="CI" />
+    </a>
+  </p>
+  <p>
+    <img src="https://github.com/user-attachments/assets/9e17e83b-b0d3-48b4-a65e-a995ba80515b" alt="RADHAT UI" width="800" />
   </p>
   <p>
     <a href="#architecture">Architecture</a>
@@ -172,11 +181,13 @@ This repository is structured as a series of PRs, each representing a chapter in
 - [x] Configure ESLint, Prettier, TypeScript strict mode
 - [x] Add Netlify deployment configuration
 
-### Chapter 7: The Polish - Integration & Documentation
-- [ ] End-to-end testing on Sepolia
-- [ ] Add screenshots/GIF of complete flow
-- [ ] Document all TODO implementations
-- [ ] Final README with assumptions and run instructions
+### Chapter 7: The Polish - Integration & Documentation ✅
+- [x] Set up git hooks with husky + lint-staged
+- [x] Redesign UI with minimalistic black/white/gray theme
+- [x] Create RADHAT favicon (R logo on black background)
+- [x] Clean up folder structure (remove .gitkeep files)
+- [x] Add root package.json scripts for linting/testing
+- [x] Update all component tests (24 passing)
 
 ## API Endpoints (Planned)
 

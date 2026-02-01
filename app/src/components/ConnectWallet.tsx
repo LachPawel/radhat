@@ -8,12 +8,12 @@ export function ConnectWallet() {
   if (isConnected && address) {
     return (
       <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-400">
+        <span className="text-sm text-neutral-500 font-mono">
           {address.slice(0, 6)}...{address.slice(-4)}
         </span>
         <button
           onClick={() => disconnect()}
-          className="px-3 py-1.5 text-sm bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+          className="px-4 py-1.5 text-xs font-medium border border-neutral-800 bg-neutral-900 hover:bg-neutral-800 text-white rounded-full transition-colors"
         >
           Disconnect
         </button>
@@ -21,18 +21,18 @@ export function ConnectWallet() {
     );
   }
 
+  // Prioritize Injected (browser wallet) or fall back to the first available connector
+  const connector = connectors.find((c) => c.type === 'injected') || connectors[0];
+
+  if (!connector) return null;
+
   return (
-    <div className="flex gap-2">
-      {connectors.map((connector) => (
-        <button
-          key={connector.uid}
-          onClick={() => connect({ connector })}
-          disabled={isPending}
-          className="px-4 py-2 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-medium transition-colors"
-        >
-          {isPending ? 'Connecting...' : `Connect ${connector.name}`}
-        </button>
-      ))}
-    </div>
+    <button
+      onClick={() => connect({ connector })}
+      disabled={isPending}
+      className="px-5 py-2 bg-white text-black hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed rounded-full text-sm font-bold tracking-wide transition-colors"
+    >
+      {isPending ? 'CONNECTING...' : 'CONNECT WALLET'}
+    </button>
   );
 }

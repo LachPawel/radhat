@@ -31,47 +31,47 @@ export function RouteButton({ onSuccess }: RouteButtonProps) {
       <button
         onClick={handleRoute}
         disabled={isLoading}
-        className="px-6 py-3 bg-green-600 hover:bg-green-500 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg font-medium transition-colors"
+        className="w-full px-6 py-4 border border-neutral-700 bg-neutral-900/50 hover:bg-neutral-900 hover:border-white text-white disabled:border-neutral-800 disabled:text-neutral-600 disabled:bg-transparent disabled:cursor-not-allowed rounded-full font-bold text-sm tracking-wide transition-all duration-200"
       >
-        {isLoading ? 'Routing...' : 'Route All Funds to Treasury'}
+        {isLoading ? 'ROUTING...' : 'ROUTE ALL FUNDS TO TREASURY'}
       </button>
 
       {error && (
-        <div className="p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="p-4 border border-neutral-700 rounded bg-neutral-900">
+          <p className="text-neutral-400 text-sm">⚠ {error}</p>
         </div>
       )}
 
       {result && (
-        <div className="p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg space-y-2">
-          <p className="text-blue-400 font-medium">Routing complete!</p>
+        <div className="p-4 border border-neutral-700 rounded bg-neutral-900 space-y-4">
+          <p className="text-white font-medium">Routing complete</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
             <div>
-              <p className="text-gray-500">Checked</p>
-              <p className="text-xl font-bold text-gray-200">{result.checked}</p>
+              <p className="text-neutral-500">Checked</p>
+              <p className="text-2xl font-bold text-neutral-400">{result.checked}</p>
             </div>
             <div>
-              <p className="text-gray-500">Funded</p>
-              <p className="text-xl font-bold text-blue-400">{result.funded}</p>
+              <p className="text-neutral-500">Funded</p>
+              <p className="text-2xl font-bold text-neutral-300">{result.funded}</p>
             </div>
             <div>
-              <p className="text-gray-500">Deployed</p>
-              <p className="text-xl font-bold text-purple-400">{result.deployed}</p>
+              <p className="text-neutral-500">Deployed</p>
+              <p className="text-2xl font-bold text-neutral-200">{result.deployed}</p>
             </div>
             <div>
-              <p className="text-gray-500">Routed</p>
-              <p className="text-xl font-bold text-green-400">{result.routed}</p>
+              <p className="text-neutral-500">Routed</p>
+              <p className="text-2xl font-bold text-white">{result.routed}</p>
             </div>
           </div>
 
           {result.deploy_tx_hash && (
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-neutral-500">
               Deploy TX:{' '}
               <a
                 href={`https://sepolia.etherscan.io/tx/${result.deploy_tx_hash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-400 hover:text-blue-300"
+                className="text-neutral-400 hover:text-white transition-colors"
               >
                 {result.deploy_tx_hash.slice(0, 16)}...
               </a>
@@ -79,7 +79,7 @@ export function RouteButton({ onSuccess }: RouteButtonProps) {
           )}
 
           {result.route_tx_hashes.length > 0 && (
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-neutral-500">
               <p>Route TXs:</p>
               <ul className="list-disc list-inside">
                 {result.route_tx_hashes.map((tx, i) => (
@@ -88,7 +88,7 @@ export function RouteButton({ onSuccess }: RouteButtonProps) {
                       href={`https://sepolia.etherscan.io/tx/${tx.tx_hash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-400 hover:text-blue-300"
+                      className="text-neutral-400 hover:text-white transition-colors"
                     >
                       {tx.tx_hash.slice(0, 16)}...
                     </a>
@@ -99,7 +99,7 @@ export function RouteButton({ onSuccess }: RouteButtonProps) {
           )}
 
           {result.errors.length > 0 && (
-            <div className="text-sm text-red-400">
+            <div className="text-sm text-neutral-400">
               <p>Errors:</p>
               <ul className="list-disc list-inside">
                 {result.errors.map((err, i) => (

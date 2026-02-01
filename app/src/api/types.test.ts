@@ -5,7 +5,7 @@ describe('API Types', () => {
   describe('DepositStatus', () => {
     it('should have all valid status values', () => {
       const validStatuses: DepositStatus[] = ['pending', 'funded', 'deployed', 'routed', 'failed'];
-      
+
       expect(validStatuses).toContain('pending');
       expect(validStatuses).toContain('funded');
       expect(validStatuses).toContain('deployed');

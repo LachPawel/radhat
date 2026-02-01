@@ -16,6 +16,15 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "src/**/*.css": [
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "@tanstack/react-query": "^5.62.0",
     "react": "^18.3.1",
@@ -37,6 +46,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "jsdom": "^25.0.1",
+    "lint-staged": "^16.2.7",
     "msw": "^2.6.0",
     "postcss": "^8.4.49",
     "prettier": "^3.4.1",

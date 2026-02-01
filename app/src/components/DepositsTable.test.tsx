@@ -27,30 +27,30 @@ const mockDeposits: DepositInfo[] = [
 describe('DepositsTable', () => {
   it('shows loading state', () => {
     render(<DepositsTable deposits={[]} isLoading={true} />);
-    
-    expect(screen.getByText('Loading deposits...')).toBeInTheDocument();
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   it('shows empty state when no deposits', () => {
     render(<DepositsTable deposits={[]} isLoading={false} />);
-    
+
     expect(screen.getByText(/No deposits yet/)).toBeInTheDocument();
   });
 
   it('renders table headers', () => {
     render(<DepositsTable deposits={mockDeposits} isLoading={false} />);
-    
+
     expect(screen.getByText('#')).toBeInTheDocument();
     expect(screen.getByText('Deposit Address')).toBeInTheDocument();
     expect(screen.getByText('User')).toBeInTheDocument();
     expect(screen.getByText('Status')).toBeInTheDocument();
     expect(screen.getByText('Created')).toBeInTheDocument();
-    expect(screen.getByText('Etherscan')).toBeInTheDocument();
+    expect(screen.getByText('Link')).toBeInTheDocument();
   });
 
   it('renders deposit rows', () => {
     render(<DepositsTable deposits={mockDeposits} isLoading={false} />);
-    
+
     // Check deposit IDs are rendered
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('2')).toBeInTheDocument();
@@ -58,17 +58,17 @@ describe('DepositsTable', () => {
 
   it('renders status badges for each deposit', () => {
     render(<DepositsTable deposits={mockDeposits} isLoading={false} />);
-    
+
     expect(screen.getByText('Pending')).toBeInTheDocument();
     expect(screen.getByText('Routed')).toBeInTheDocument();
   });
 
   it('renders Etherscan links', () => {
     render(<DepositsTable deposits={mockDeposits} isLoading={false} />);
-    
+
     const links = screen.getAllByText('View ↗');
     expect(links).toHaveLength(2);
-    
+
     // Check first link points to correct address
     expect(links[0]).toHaveAttribute(
       'href',
@@ -78,7 +78,7 @@ describe('DepositsTable', () => {
 
   it('truncates addresses correctly', () => {
     render(<DepositsTable deposits={mockDeposits} isLoading={false} />);
-    
+
     // Should show truncated addresses (8 chars...6 chars)
     expect(screen.getByText('0xabcdef...cdef12')).toBeInTheDocument();
   });
