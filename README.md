@@ -155,11 +155,12 @@ This repository is structured as a series of PRs, each representing a chapter in
 - [x] Add `/health` endpoint for Railway deployment
 - [x] Add `sync-deployments.sh` script to sync contract addresses
 
-### Chapter 5: The Router - Fund Routing Logic
-- [ ] Implement `/router` endpoint
-- [ ] Add balance checking via RPC
-- [ ] Deploy proxies for funded addresses
-- [ ] Route ETH to treasury
+### Chapter 5: The Router - Fund Routing Logic ✅
+- [x] Implement `/router` endpoint with full workflow
+- [x] Add balance checking via RPC (Alloy)
+- [x] Deploy proxies for funded addresses (`deployMultiple()`)
+- [x] Route ETH to treasury (`transferFunds()`)
+- [x] Track status: pending → funded → deployed → routed (or failed)
 
 ### Chapter 6: The Interface - React Dashboard
 - [ ] Create minimal frontend with deposit table
@@ -203,9 +204,25 @@ Route all funded deposit addresses to treasury.
 ```json
 {
   "checked": 12,
+  "funded": 5,
+  "deployed": 5,
   "routed": 3,
-  "tx_hashes": ["0x...", "0x..."]
+  "deploy_tx_hash": "0x...",
+  "route_tx_hashes": [
+    {
+      "proxy_address": "0x...",
+      "tx_hash": "0x...",
+      "amount_wei": "1000000000000000"
+    }
+  ],
+  "errors": []
 }
+```
+
+**Status Flow:**
+```
+pending → funded → deployed → routed
+                           ↘ failed
 ```
 
 ## Getting Started
@@ -231,12 +248,39 @@ cp .env.example .env
 cp rust-backend/.env.example rust-backend/.env
 # Edit both files with your keys
 
+# Sync contract addresses to rust-backend/.env
+./scripts/sync-deployments.sh sepolia
+
 # Compile contracts
 pnpm compile
 
-# Deploy to Sepolia
+# Deploy to Sepolia (if needed)
 pnpm deploy:sepolia
 ```
+
+### Running
+
+```bash
+# Terminal 1: Rust backend
+cd rust-backend
+cargo run
+
+# Terminal 2: Frontend (Chapter 6)
+pnpm frontend
+```
+
+### Private Key Security
+
+⚠️ The `PRIVATE_KEY` environment variable is used for signing transactions in Chapter 5+.
+
+**For development/testing:**
+- Use a dedicated testnet wallet with only Sepolia ETH
+- Never reuse keys from mainnet or other important wallets
+
+**For production:**
+- Use a hardware wallet integration
+- Use AWS KMS, GCP KMS, or HashiCorp Vault
+- Consider a transaction signing service (e.g., Fireblocks, Fordefi)
 
 ### Running
 
@@ -250,10 +294,11 @@ pnpm frontend
 
 ### Testing Flow
 
-1. Call `POST /deposit` → receive deposit address
-2. Send 0.001 ETH to address on Sepolia
-3. Watch status change to "Funded"
-4. Call `POST /router` → verify treasury receives ETH
+1. Start the backend: `cd rust-backend && cargo run`
+2. Call `POST /deposit` → receive deposit address
+3. Send 0.001 ETH to address on Sepolia
+4. Call `POST /router` → proxies deploy, funds route to treasury
+5. Check status changes: pending → funded → deployed → routed
 
 ## TODOs Implemented
 
