@@ -49,17 +49,16 @@ function App() {
         {/* Hero Section */}
         <div className="mb-20">
           <div className="inline-flex items-center rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1 text-xs font-medium text-neutral-400 mb-6">
-            CRYPTO PAYMENTS
+            CREATE2 INFRASTRUCTURE
           </div>
           <h1 className="text-5xl sm:text-7xl font-bold text-white tracking-tight mb-6 max-w-3xl">
-            All in one platform,
+            Deterministic deposits,
             <br />
-            built for scale.
+            optimized for gas.
           </h1>
           <p className="text-lg text-neutral-400 max-w-2xl mb-10 leading-relaxed">
-            Generate deterministic deposit addresses using CREATE2. Minimal proxies ensure funds
-            flow securely to your treasury on Sepolia, reducing gas costs and simplifying
-            operations.
+            Generate infinite unique deposit addresses off-chain. Deploy minimal proxies only when
+            funds arrive, and batch route everything to your treasury in a single transaction.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6">
@@ -75,29 +74,31 @@ function App() {
         {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
           <div className="p-6 rounded-2xl bg-neutral-900 border border-neutral-800">
-            <h3 className="text-white font-semibold mb-2">Generate Address</h3>
+            <h3 className="text-white font-semibold mb-2">Off-Chain Generation</h3>
             <p className="text-sm text-neutral-500 leading-relaxed">
-              Connect your wallet and generate a unique, deterministic deposit address for your
-              user.
+              Compute deterministic addresses instantly using CREATE2. No gas costs until the
+              address is actually used.
             </p>
           </div>
           <div className="p-6 rounded-2xl bg-neutral-900 border border-neutral-800">
-            <h3 className="text-white font-semibold mb-2">Receive Funds</h3>
+            <h3 className="text-white font-semibold mb-2">Non-Custodial Flow</h3>
             <p className="text-sm text-neutral-500 leading-relaxed">
-              Users send Sepolia ETH to the address. The system automatically detects incoming
-              deposits.
+              Funds flow through EIP-1167 minimal proxies directly to your treasury. No intermediate
+              hot wallets.
             </p>
           </div>
           <div className="p-6 rounded-2xl bg-neutral-900 border border-neutral-800">
-            <h3 className="text-white font-semibold mb-2">Optimized Routing</h3>
+            <h3 className="text-white font-semibold mb-2">Batch Routing</h3>
             <p className="text-sm text-neutral-500 leading-relaxed">
-              Batch process deposits to deploy proxies and forward funds to treasury in one go.
+              Consolidate funds from thousands of deposit addresses into a secure cold storage with
+              optimized calldata.
             </p>
           </div>
           <div className="p-6 rounded-2xl bg-neutral-900 border border-neutral-800">
-            <h3 className="text-white font-semibold mb-2">Full Visibility</h3>
+            <h3 className="text-white font-semibold mb-2">Real-time Indexing</h3>
             <p className="text-sm text-neutral-500 leading-relaxed">
-              Real-time monitoring of all deposit addresses, balances, and deployment status.
+              Track pending, funded, and routed states for every user address automatically via the
+              Rust backend.
             </p>
           </div>
         </div>
