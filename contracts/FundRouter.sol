@@ -10,13 +10,15 @@ interface IERC20 {
 
 /// @title FundRouter
 /// @notice Pull ETH held by a proxy and forward it (and optional ERC20s) to a treasury.
-/// @dev Key checks and a couple of mechanics are TODOs for the candidate.
+/// @dev Implements permission checks via FundRouterStorage and handles ETH/ERC20 routing.
 contract FundRouter is IFundRouter {
     error NotAuthorizedCaller();
     error TreasuryNotAllowed();
     error LengthMismatch();
     error EthSendFailed();
     error ZeroTreasury();
+    error ERC20TransferFailed();
+    error PermissionCheckFailed();
 
     /// @dev External storage contract with allowlists.
     address public immutable STORAGE;
@@ -26,18 +28,24 @@ contract FundRouter is IFundRouter {
         STORAGE = storageContract;
     }
 
-    /// @dev Minimal interface to the storage contract.
-    function _isAllowedCaller(address a) internal view returns (bool ok) {
-        // TODO: call FundRouterStorage.isAllowedCaller(a)
-        // hint: (bool s, bytes memory r) = STORAGE.staticcall(abi.encodeWithSignature("isAllowedCaller(address)", a));
-        // then decode (bool).
-        // For now, pretend false to force candidate to implement.
-        ok = false;
-    }
-
-    function _isAllowedTreasury(address a) internal view returns (bool ok) {
-        // TODO: call FundRouterStorage.isAllowedTreasury(a) and return result.
-        ok = false;
+    /// @dev Check both caller and treasury permissions in a single staticcall for gas efficiency.
+    /// @param caller The address attempting to call transferFunds
+    /// @param treasury The treasury address to receive funds
+    function _checkPermissions(address caller, address treasury) internal view {
+        (bool success, bytes memory result) = STORAGE.staticcall(
+            abi.encodeWithSignature("isAllowedCallerAndTreasury(address,address)", caller, treasury)
+        );
+        if (!success) revert PermissionCheckFailed();
+        
+        bool allowed = abi.decode(result, (bool));
+        if (!allowed) {
+            // Determine which permission failed for better error reporting
+            (bool s1, bytes memory r1) = STORAGE.staticcall(
+                abi.encodeWithSignature("isAllowedCaller(address)", caller)
+            );
+            if (!s1 || !abi.decode(r1, (bool))) revert NotAuthorizedCaller();
+            revert TreasuryNotAllowed();
+        }
     }
 
     /// @inheritdoc IFundRouter
@@ -49,40 +57,30 @@ contract FundRouter is IFundRouter {
     ) external override {
         if (treasuryAddress == address(0)) revert ZeroTreasury();
 
-        // TODO: enforce that msg.sender is an allowed caller
-        if (!_isAllowedCaller(msg.sender)) revert NotAuthorizedCaller();
-
-        // TODO: enforce that treasury is allowed
-        if (!_isAllowedTreasury(treasuryAddress)) revert TreasuryNotAllowed();
+        // Single staticcall to check both permissions (gas optimization)
+        _checkPermissions(msg.sender, treasuryAddress);
 
         if (tokens.length != amounts.length) revert LengthMismatch();
 
         // ---- ETH routing (from this contract's balance) ----
-        // Assumption: ETH has already been sent to this router (e.g., via the proxy's fallback)
-        // or msg.sender has ETH and is delegatecalling; keep it simple: just forward from here.
+        // IMPORTANT: ETH has already been sent here via proxy's CALL-based forwarding
         if (etherAmount > 0) {
-            // IMPORTANT: this assumes the ETH is already held here.
-            // A minimal proxy that forwards value to this router will land ETH here.
             (bool ok, ) = treasuryAddress.call{value: etherAmount}("");
             if (!ok) revert EthSendFailed();
         }
 
-        // ---- ERC20 routing (optional) ----
+        // ---- ERC20 routing ----
+        // Assumes tokens are already held by this contract
         for (uint256 i = 0; i < tokens.length; i++) {
             address token = tokens[i];
             uint256 amt = amounts[i];
             if (amt == 0) continue;
 
-            // TODO: implement ERC20 transfer out.
-            // Choices:
-            // - If tokens sit here, do IERC20(token).transfer(treasuryAddress, amt).
-            // - If tokens sit on msg.sender, you'd need transferFrom and prior approval (not defined on IERC20 above).
-            // Keep it simple: assume tokens are already held here.
-            // For now we leave as a stub—candidate should implement.
-            // e.g. require(IERC20(token).transfer(treasuryAddress, amt), "ERC20 transfer failed");
+            bool transferred = IERC20(token).transfer(treasuryAddress, amt);
+            if (!transferred) revert ERC20TransferFailed();
         }
     }
 
-    // Accept ETH so proxies can push value here.
+    // Accept ETH so proxies can push value here via CALL.
     receive() external payable {}
 }
