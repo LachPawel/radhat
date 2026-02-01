@@ -11,7 +11,22 @@
     "rust:build": "cd rust-backend && cargo build --release",
     "rust:test": "cd rust-backend && cargo test",
     "sync:deployments": "./scripts/sync-deployments.sh",
-    "frontend": "pnpm --filter app dev"
+    "frontend": "cd app && pnpm dev",
+    "frontend:build": "cd app && pnpm build",
+    "frontend:lint": "cd app && pnpm lint",
+    "frontend:format": "cd app && pnpm format",
+    "frontend:typecheck": "cd app && pnpm typecheck",
+    "frontend:test": "cd app && pnpm test:run",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "app/src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "app/src/**/*.css": [
+      "prettier --write"
+    ]
   },
   "keywords": [
     "ethereum",
@@ -27,6 +42,8 @@
     "@openzeppelin/contracts": "^5.4.0",
     "dotenv": "^16.4.0",
     "hardhat": "^2.22.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "typescript": "^5.5.0"
   }
 }
