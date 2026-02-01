@@ -147,11 +147,13 @@ This repository is structured as a series of PRs, each representing a chapter in
 - [x] Deploy to Sepolia and save addresses to `deployments.json`
 - [x] Add verification step to confirm permissions are set correctly
 
-### Chapter 4: The Backend - Rust Foundation
-- [ ] Set up Axum server with CORS
-- [ ] Implement CREATE2 address computation matching Solidity
-- [ ] Create SQLite schema for deposit addresses
-- [ ] Build `/deposit` endpoint for address generation
+### Chapter 4: The Backend - Rust Foundation ✅
+- [x] Set up Axum server with CORS
+- [x] Implement CREATE2 address computation matching Solidity (6 tests)
+- [x] Create SQLite schema for deposit addresses with nonce tracking
+- [x] Build `/deposit` endpoint for address generation
+- [x] Add `/health` endpoint for Railway deployment
+- [x] Add `sync-deployments.sh` script to sync contract addresses
 
 ### Chapter 5: The Router - Fund Routing Logic
 - [ ] Implement `/router` endpoint

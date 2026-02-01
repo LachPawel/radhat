@@ -7,8 +7,10 @@
     "test": "hardhat test",
     "deploy:local": "hardhat run scripts/deploy.ts --network hardhat",
     "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia",
-    "rust:run": "cargo run --manifest-path rust-backend/Cargo.toml",
-    "rust:build": "cargo build --manifest-path rust-backend/Cargo.toml --release",
+    "rust:run": "cd rust-backend && cargo run",
+    "rust:build": "cd rust-backend && cargo build --release",
+    "rust:test": "cd rust-backend && cargo test",
+    "sync:deployments": "./scripts/sync-deployments.sh",
     "frontend": "pnpm --filter app dev"
   },
   "keywords": [
