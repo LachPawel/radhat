@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Hardhat
+cache/
+artifacts/
+typechain-types/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Rust
+rust-backend/target/
+rust-backend/*.db
+rust-backend/*.db-journal
+
+# Build outputs
+dist/
+build/
+.next/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Deployment artifacts (keep deployments.json tracked)
+# deployments.json
+
+# Coverage
+coverage/
+coverage.json
