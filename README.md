@@ -87,8 +87,8 @@ This allows computing the address **before** deployment - the address is determi
 ## Tech Stack
 
 - **Smart Contracts**: Solidity 0.8.20, Hardhat 2, ethers.js, EIP-1167 Minimal Proxy
-- **Backend**: Rust, Axum, SQLx, alloy
-- **Frontend**: React/Next.js, TypeScript, TailwindCSS
+- **Backend**: Rust, Axum, SQLx, alloy (deployed on Railway)
+- **Frontend**: React, Vite, TypeScript, TailwindCSS, wagmi (deployed on Netlify)
 - **Blockchain**: Ethereum Sepolia Testnet
 
 ## Project Structure
@@ -162,11 +162,15 @@ This repository is structured as a series of PRs, each representing a chapter in
 - [x] Route ETH to treasury (`transferFunds()`)
 - [x] Track status: pending → funded → deployed → routed (or failed)
 
-### Chapter 6: The Interface - React Dashboard
-- [ ] Create minimal frontend with deposit table
-- [ ] Add "Get Next Deposit Address" button
-- [ ] Add "Route Funds to Treasury" button
-- [ ] Implement periodic balance polling
+### Chapter 6: The Interface - React Dashboard ✅
+- [x] Create Vite + React + TypeScript frontend with TailwindCSS
+- [x] Add wallet connect with wagmi (MetaMask, WalletConnect)
+- [x] Create minimal frontend with deposit table
+- [x] Add "Generate Deposit Address" button (uses connected wallet)
+- [x] Add "Route Funds to Treasury" button
+- [x] Implement periodic balance polling (15s auto-refresh)
+- [x] Configure ESLint, Prettier, TypeScript strict mode
+- [x] Add Netlify deployment configuration
 
 ### Chapter 7: The Polish - Integration & Documentation
 - [ ] End-to-end testing on Sepolia
