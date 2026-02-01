@@ -6,7 +6,8 @@ import type {
   RouteResponse,
 } from '../../api/types';
 
-const API_URL = 'https://radhat-production.up.railway.app';
+// Use the same API URL as the client (defaults to localhost:3001 in tests)
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 // Mock data
 export const mockHealth: HealthResponse = {
