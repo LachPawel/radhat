@@ -136,37 +136,44 @@ impl RpcClient {
     }
 
     /// Check balances for multiple addresses
-    pub async fn get_balances(&self, addresses: &[Address]) -> Result<Vec<(Address, U256)>, RpcError> {
+    pub async fn get_balances(
+        &self,
+        addresses: &[Address],
+    ) -> Result<Vec<(Address, U256)>, RpcError> {
         let mut results = Vec::with_capacity(addresses.len());
-        
+
         // TODO: In the future, use multicall for efficiency
         // For now, make sequential calls
         for &addr in addresses {
             let balance = self.get_balance(addr).await?;
             results.push((addr, balance));
         }
-        
+
         Ok(results)
     }
 
     /// Deploy multiple proxies using DeterministicProxyDeployer.deployMultiple()
     /// Returns the transaction hash
-    pub async fn deploy_multiple(&self, salts: Vec<FixedBytes<32>>) -> Result<FixedBytes<32>, RpcError> {
+    pub async fn deploy_multiple(
+        &self,
+        salts: Vec<FixedBytes<32>>,
+    ) -> Result<FixedBytes<32>, RpcError> {
         if salts.is_empty() {
             return Err(RpcError::ContractCall("No salts provided".to_string()));
         }
 
-        let contract = IDeterministicProxyDeployer::new(self.deployer_address, &self.wallet_provider);
-        
+        let contract =
+            IDeterministicProxyDeployer::new(self.deployer_address, &self.wallet_provider);
+
         let call = contract.deployMultiple(salts);
-        
+
         let pending_tx = call
             .send()
             .await
             .map_err(|e| RpcError::ContractCall(e.to_string()))?;
 
         let tx_hash = *pending_tx.tx_hash();
-        
+
         // Wait for the transaction to be mined
         let receipt = pending_tx
             .get_receipt()
@@ -174,11 +181,13 @@ impl RpcClient {
             .map_err(|e| RpcError::TransactionFailed(e.to_string()))?;
 
         if !receipt.status() {
-            return Err(RpcError::TransactionFailed("Transaction reverted".to_string()));
+            return Err(RpcError::TransactionFailed(
+                "Transaction reverted".to_string(),
+            ));
         }
 
         tracing::info!("deployMultiple tx confirmed: {:?}", tx_hash);
-        
+
         Ok(tx_hash)
     }
 
@@ -186,16 +195,16 @@ impl RpcClient {
     /// Returns the transaction hash
     pub async fn transfer_funds(&self, proxy_address: Address) -> Result<FixedBytes<32>, RpcError> {
         let contract = IFundRouter::new(proxy_address, &self.wallet_provider);
-        
+
         let call = contract.transferFunds(self.treasury_address);
-        
+
         let pending_tx = call
             .send()
             .await
             .map_err(|e| RpcError::ContractCall(e.to_string()))?;
 
         let tx_hash = *pending_tx.tx_hash();
-        
+
         // Wait for the transaction to be mined
         let receipt = pending_tx
             .get_receipt()
@@ -203,22 +212,28 @@ impl RpcClient {
             .map_err(|e| RpcError::TransactionFailed(e.to_string()))?;
 
         if !receipt.status() {
-            return Err(RpcError::TransactionFailed("Transaction reverted".to_string()));
+            return Err(RpcError::TransactionFailed(
+                "Transaction reverted".to_string(),
+            ));
         }
 
-        tracing::info!("transferFunds tx confirmed for proxy {:?}: {:?}", proxy_address, tx_hash);
-        
+        tracing::info!(
+            "transferFunds tx confirmed for proxy {:?}: {:?}",
+            proxy_address,
+            tx_hash
+        );
+
         Ok(tx_hash)
     }
 
     /// Batch transfer funds from multiple proxies
     /// Returns a vector of (proxy_address, tx_hash) for successful transfers
     pub async fn batch_transfer_funds(
-        &self, 
-        proxy_addresses: Vec<Address>
+        &self,
+        proxy_addresses: Vec<Address>,
     ) -> Result<Vec<(Address, FixedBytes<32>)>, RpcError> {
         let mut results = Vec::new();
-        
+
         for proxy in proxy_addresses {
             match self.transfer_funds(proxy).await {
                 Ok(tx_hash) => {
@@ -230,7 +245,7 @@ impl RpcClient {
                 }
             }
         }
-        
+
         Ok(results)
     }
 
@@ -255,14 +270,14 @@ pub fn parse_salt(salt_hex: &str) -> Result<FixedBytes<32>, RpcError> {
     let salt_hex = salt_hex.strip_prefix("0x").unwrap_or(salt_hex);
     let bytes = hex::decode(salt_hex)
         .map_err(|_| RpcError::InvalidAddress(format!("Invalid salt hex: {}", salt_hex)))?;
-    
+
     if bytes.len() != 32 {
         return Err(RpcError::InvalidAddress(format!(
             "Salt must be 32 bytes, got {}",
             bytes.len()
         )));
     }
-    
+
     Ok(FixedBytes::from_slice(&bytes))
 }
 
@@ -306,4 +321,3 @@ mod tests {
         assert_eq!(format!("{:?}", result).to_lowercase(), addr.to_lowercase());
     }
 }
-

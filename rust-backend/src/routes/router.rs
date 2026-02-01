@@ -1,7 +1,7 @@
 //! POST /router - Route funded deposits to treasury
 
-use axum::{extract::State, Json};
 use alloy::primitives::U256;
+use axum::{extract::State, Json};
 
 use crate::{
     db,
@@ -12,7 +12,7 @@ use crate::{
 };
 
 /// POST /router
-/// 
+///
 /// Processes pending and funded deposits:
 /// 1. Fetch all 'pending' and 'funded' deposits from DB
 /// 2. Check balances on-chain for pending deposits
@@ -40,7 +40,9 @@ pub async fn route_deposits(
         Ok(client) => client,
         Err(e) => {
             tracing::error!("Failed to initialize RPC client: {}", e);
-            response.errors.push(format!("RPC initialization failed: {}", e));
+            response
+                .errors
+                .push(format!("RPC initialization failed: {}", e));
             return Ok(Json(response));
         }
     };
@@ -71,31 +73,29 @@ pub async fn route_deposits(
     let mut balances: Vec<(String, U256)> = vec![];
     for deposit in &pending_deposits {
         match parse_address(&deposit.deposit_address) {
-            Ok(addr) => {
-                match rpc.get_balance(addr).await {
-                    Ok(balance) => {
-                        balances.push((deposit.deposit_address.clone(), balance));
-                        if balance > U256::ZERO {
-                            tracing::info!(
-                                "Deposit {} has balance: {} wei",
-                                deposit.deposit_address,
-                                balance
-                            );
-                        }
-                    }
-                    Err(e) => {
-                        tracing::error!(
-                            "Failed to get balance for {}: {}",
+            Ok(addr) => match rpc.get_balance(addr).await {
+                Ok(balance) => {
+                    balances.push((deposit.deposit_address.clone(), balance));
+                    if balance > U256::ZERO {
+                        tracing::info!(
+                            "Deposit {} has balance: {} wei",
                             deposit.deposit_address,
-                            e
+                            balance
                         );
-                        response.errors.push(format!(
-                            "Balance check failed for {}: {}",
-                            deposit.deposit_address, e
-                        ));
                     }
                 }
-            }
+                Err(e) => {
+                    tracing::error!(
+                        "Failed to get balance for {}: {}",
+                        deposit.deposit_address,
+                        e
+                    );
+                    response.errors.push(format!(
+                        "Balance check failed for {}: {}",
+                        deposit.deposit_address, e
+                    ));
+                }
+            },
             Err(e) => {
                 tracing::error!("Invalid address {}: {}", deposit.deposit_address, e);
             }
@@ -108,7 +108,9 @@ pub async fn route_deposits(
         if *balance > U256::ZERO {
             if let Err(e) = db::update_deposit_status(&state.db, addr, "funded").await {
                 tracing::error!("Failed to update status for {}: {}", addr, e);
-                response.errors.push(format!("DB update failed for {}: {}", addr, e));
+                response
+                    .errors
+                    .push(format!("DB update failed for {}: {}", addr, e));
             } else {
                 newly_funded.push(addr.clone());
             }
@@ -116,14 +118,18 @@ pub async fn route_deposits(
     }
 
     response.funded = newly_funded.len() + funded_deposits.len();
-    tracing::info!("{} newly funded, {} previously funded", newly_funded.len(), funded_deposits.len());
+    tracing::info!(
+        "{} newly funded, {} previously funded",
+        newly_funded.len(),
+        funded_deposits.len()
+    );
 
     // Collect all funded deposits for deployment
     let mut deposits_to_deploy: Vec<&db::DepositRow> = vec![];
-    
+
     // Add previously funded deposits
     deposits_to_deploy.extend(funded_deposits.iter().copied());
-    
+
     // Add newly funded deposits (find them in pending_deposits)
     for addr in &newly_funded {
         if let Some(dep) = pending_deposits.iter().find(|d| &d.deposit_address == addr) {
@@ -141,11 +147,18 @@ pub async fn route_deposits(
     for deposit in &deposits_to_deploy {
         match parse_salt(&deposit.salt) {
             Ok(salt) => {
-                salts_and_deposits.push((salt, deposit.deposit_address.clone(), deposit.salt.clone()));
+                salts_and_deposits.push((
+                    salt,
+                    deposit.deposit_address.clone(),
+                    deposit.salt.clone(),
+                ));
             }
             Err(e) => {
                 tracing::error!("Invalid salt for {}: {}", deposit.deposit_address, e);
-                response.errors.push(format!("Invalid salt for {}: {}", deposit.deposit_address, e));
+                response.errors.push(format!(
+                    "Invalid salt for {}: {}",
+                    deposit.deposit_address, e
+                ));
             }
         }
     }
@@ -163,7 +176,11 @@ pub async fn route_deposits(
         Ok(tx_hash) => {
             response.deploy_tx_hash = Some(format!("{:#x}", tx_hash));
             response.deployed = salts_and_deposits.len();
-            tracing::info!("Deployed {} proxies, tx: {:#x}", salts_and_deposits.len(), tx_hash);
+            tracing::info!(
+                "Deployed {} proxies, tx: {:#x}",
+                salts_and_deposits.len(),
+                tx_hash
+            );
 
             // Update status to 'deployed'
             for (_, addr, _) in &salts_and_deposits {
@@ -189,7 +206,7 @@ pub async fn route_deposits(
             Ok(proxy_addr) => {
                 // Get current balance before transfer
                 let balance = rpc.get_balance(proxy_addr).await.unwrap_or(U256::ZERO);
-                
+
                 if balance == U256::ZERO {
                     tracing::warn!("Proxy {} has zero balance, skipping transfer", addr);
                     continue;
@@ -206,14 +223,25 @@ pub async fn route_deposits(
 
                         // Update status to 'routed'
                         if let Err(e) = db::update_deposit_status(&state.db, addr, "routed").await {
-                            tracing::error!("Failed to update status to routed for {}: {}", addr, e);
+                            tracing::error!(
+                                "Failed to update status to routed for {}: {}",
+                                addr,
+                                e
+                            );
                         }
 
-                        tracing::info!("Routed {} wei from {} to treasury, tx: {:#x}", balance, addr, tx_hash);
+                        tracing::info!(
+                            "Routed {} wei from {} to treasury, tx: {:#x}",
+                            balance,
+                            addr,
+                            tx_hash
+                        );
                     }
                     Err(e) => {
                         tracing::error!("transferFunds failed for {}: {}", addr, e);
-                        response.errors.push(format!("Transfer failed for {}: {}", addr, e));
+                        response
+                            .errors
+                            .push(format!("Transfer failed for {}: {}", addr, e));
                     }
                 }
             }

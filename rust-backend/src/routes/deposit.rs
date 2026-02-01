@@ -22,8 +22,8 @@ pub async fn create_deposit(
 ) -> Result<Json<CreateDepositResponse>, AppError> {
     // Validate and parse user address
     let user_address_str = req.user.to_lowercase();
-    let user_bytes = parse_address(&user_address_str)
-        .map_err(|_| AppError::InvalidAddress(req.user.clone()))?;
+    let user_bytes =
+        parse_address(&user_address_str).map_err(|_| AppError::InvalidAddress(req.user.clone()))?;
 
     // Get deployer and init code hash
     let deployer = state.config.deployer_bytes()?;
@@ -79,7 +79,7 @@ pub async fn get_deposit(
     Path(address): Path<String>,
 ) -> Result<Json<DepositInfo>, AppError> {
     let address = address.to_lowercase();
-    
+
     let row = db::get_deposit_by_address(&state.db, &address)
         .await?
         .ok_or_else(|| AppError::NotFound(format!("Deposit {} not found", address)))?;

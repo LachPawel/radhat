@@ -83,4 +83,3 @@ pub struct RouteTransactionInfo {
     pub tx_hash: String,
     pub amount_wei: String,
 }
-

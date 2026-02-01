@@ -76,31 +76,30 @@ pub async fn get_and_increment_nonce(
     let mut tx = pool.begin().await?;
 
     // Try to get existing nonce
-    let row: Option<(i64,)> = sqlx::query_as(
-        "SELECT next_nonce FROM user_nonces WHERE user_address = ? FOR UPDATE",
-    )
-    .bind(user_address)
-    .fetch_optional(&mut *tx)
-    .await
-    .unwrap_or(None);
+    let row: Option<(i64,)> =
+        sqlx::query_as("SELECT next_nonce FROM user_nonces WHERE user_address = ? FOR UPDATE")
+            .bind(user_address)
+            .fetch_optional(&mut *tx)
+            .await
+            .unwrap_or(None);
 
     let nonce = match row {
         Some((n,)) => {
             // Increment existing nonce
-            sqlx::query("UPDATE user_nonces SET next_nonce = next_nonce + 1 WHERE user_address = ?")
-                .bind(user_address)
-                .execute(&mut *tx)
-                .await?;
-            n as u64
-        }
-        None => {
-            // Insert new user with nonce 0, return 0, set next to 1
             sqlx::query(
-                "INSERT INTO user_nonces (user_address, next_nonce) VALUES (?, 1)",
+                "UPDATE user_nonces SET next_nonce = next_nonce + 1 WHERE user_address = ?",
             )
             .bind(user_address)
             .execute(&mut *tx)
             .await?;
+            n as u64
+        }
+        None => {
+            // Insert new user with nonce 0, return 0, set next to 1
+            sqlx::query("INSERT INTO user_nonces (user_address, next_nonce) VALUES (?, 1)")
+                .bind(user_address)
+                .execute(&mut *tx)
+                .await?;
             0
         }
     };
@@ -229,7 +228,7 @@ pub async fn get_deposits_by_statuses(
     if statuses.is_empty() {
         return Ok(vec![]);
     }
-    
+
     // Build dynamic query with IN clause
     let placeholders: Vec<&str> = statuses.iter().map(|_| "?").collect();
     let query = format!(
@@ -241,12 +240,12 @@ pub async fn get_deposits_by_statuses(
         "#,
         placeholders.join(", ")
     );
-    
+
     let mut query_builder = sqlx::query_as::<_, DepositRow>(&query);
     for status in statuses {
         query_builder = query_builder.bind(*status);
     }
-    
+
     query_builder.fetch_all(pool).await
 }
 
